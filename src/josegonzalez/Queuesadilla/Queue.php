@@ -33,6 +33,7 @@ class Queue
             'id'    => md5(uniqid('', true)),
             'queue_time' => microtime(true),
         ];
+
         $success = $this->engine->push($item, $options);
 
         unset($item['id']);

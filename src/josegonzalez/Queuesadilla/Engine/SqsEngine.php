@@ -8,6 +8,7 @@ use Aws\Sqs\SqsClient;
 class SqsEngine extends Base
 {
     protected $sqsSettings = [
+        'endpoint',
         'version',
         'region',
         'queue',
@@ -90,7 +91,10 @@ class SqsEngine extends Base
         $class["options"] = $options;
         $class["queue"] = $queue;
 
-        return $this->sendMessage($class, $queue);
+        $res = $this->sendMessage($class, $queue);
+        $messageId = $res->get("MessageId");
+
+        return ($messageId ? true : false);
     }
 
     /**
@@ -98,7 +102,13 @@ class SqsEngine extends Base
      */
     public function queues()
     {
-        return $this->connection()->listQueues();
+        $response = $this->connection()->listQueues();
+        $queues = $response->get("QueueUrls") ? $response->get("QueueUrls") : [];
+
+        return array_map(function($value) {
+            $e = explode("/", $value);
+            return $e[count($e)-1];
+        }, $queues);
     }
 
     /**

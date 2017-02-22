@@ -81,7 +81,7 @@ class SequentialWorker extends Base
     public function connect()
     {
         $maxIterations = $this->maxIterations ? sprintf(', max iterations %s', $this->maxIterations) : '';
-        $this->logger()->info(sprintf('Starting worker%s', $maxIterations));
+        $this->logger()->info(sprintf('Starting worker%s on queue: %s', $maxIterations, $this->queue));
         return (bool)$this->engine->connection();
     }
 
